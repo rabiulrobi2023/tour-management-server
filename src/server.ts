@@ -3,7 +3,7 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import "dotenv/config";
 import app from "./app";
-import { enfVariable } from "./config/envConfig";
+import { envVariable } from "./app/config/envConfig";
 
 let server: Server;
 
@@ -11,13 +11,13 @@ let server: Server;
 
 const startServer = async () => {
   try {
-    await mongoose.connect(`${enfVariable.DB_URL}`);
+    await mongoose.connect(`${envVariable.DB_URL}`);
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB with Mongoose!"
     );
 
-    server = app.listen(enfVariable.PORT, () => {
-      console.log(`Tour Management Server is Running on Port: ${enfVariable.PORT}`);
+    server = app.listen(envVariable.PORT, () => {
+      console.log(`Tour Management Server is Running on Port: ${envVariable.PORT}`);
     });
   } catch (error) {
     console.log(error);
