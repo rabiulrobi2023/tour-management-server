@@ -20,7 +20,8 @@ const createUserValidationSchema = z.object({
     .regex(/[!@#$%^&*]/, {
       message:
         "Password must contain at least one special character (!@#$%^&*)",
-    }).optional(),
+    })
+    .optional(),
 
   phone: z
     .string()

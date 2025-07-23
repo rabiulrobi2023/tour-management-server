@@ -4,10 +4,9 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import app from "./app";
 import { envVariable } from "./app/config/envConfig";
+import seedSuperAdmin from "./app/utils/seedSuperAdmin";
 
 let server: Server;
-
-
 
 const startServer = async () => {
   try {
@@ -17,14 +16,19 @@ const startServer = async () => {
     );
 
     server = app.listen(envVariable.PORT, () => {
-      console.log(`Tour Management Server is Running on Port: ${envVariable.PORT}`);
+      console.log(
+        `Tour Management Server is Running on Port: ${envVariable.PORT}`
+      );
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-startServer();
+(async () => {
+  await startServer();
+  await seedSuperAdmin();
+})();
 
 //=============Unhandle Rejection Error Handling================
 process.on("unhandledRejection", (err) => {

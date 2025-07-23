@@ -15,9 +15,11 @@ export enum Role {
   superAdmin = "superAdmin",
   user = "user",
   admin = "admin",
+  guide = "guide",
 }
 
 export interface IUser {
+  _id?: Types.ObjectId
   name: string;
   email: string;
   password?: string;
