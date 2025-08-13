@@ -9,18 +9,20 @@ import {
 } from "../../utils/userTokens";
 import { JwtPayload } from "jsonwebtoken";
 import { passwordHashing } from "../../utils/passwordHashing";
+import { checkPassword } from "../../utils/checkPassword";
 
 const credentialLogin = async (payload: Partial<IUser>) => {
   const isUserExists = await User.findOne({ email: payload.email });
-
+ 
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Wrong email id");
   }
 
-  const isPasswordMatch = await bcrypt.compare(
+  const isPasswordMatch = await checkPassword(
     payload.password as string,
     isUserExists.password as string
   );
+
   if (!isPasswordMatch) {
     throw new AppError(httpStatus.BAD_REQUEST, "Wrong password");
   }

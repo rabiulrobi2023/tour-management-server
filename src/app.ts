@@ -23,7 +23,7 @@ app.use(passport.session());
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({origin:[envVariable.FORNTEND_URL]}));
 
 app.use("/api/v1", router);
 

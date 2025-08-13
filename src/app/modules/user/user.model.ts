@@ -68,4 +68,9 @@ const userSchema = new Schema<IUser>(
   }
 );
 
+// userSchema.post("findOne", function (data, next) {
+//   data.password = "";
+//   next();
+// });
+
 export const User = model<IUser>("user", userSchema);

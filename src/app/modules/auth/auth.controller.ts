@@ -7,21 +7,34 @@ import { setCookie } from "../../utils/setCookie";
 import { userLogout } from "../../utils/userLogout";
 import { ITokenName } from "./auth.interface";
 import { AuthService } from "./auth.service";
-import { IUser } from "../user/user.ifterface";
 import { envVariable } from "../../config/envConfig";
 import AppError from "../../errors/AppError";
 import { generateUserTokens } from "../../utils/userTokens";
+import passport from "passport";
+
 
 const credentialLogin = catchAsync(async (req, res, next) => {
-  const result = await AuthService.credentialLogin(req.body);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  passport.authenticate(
+    "local",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (err: any, user: any, info: any) => {
+      if (err) {
+        return next(new AppError(httpStatus.BAD_REQUEST, err));
+      }
 
-  setCookie(res, ITokenName.accessToken, result.accessToken);
-  setCookie(res, ITokenName.refreshToken, result.refreshToken);
+      const userTokens = generateUserTokens(user);
+      setCookie(res, ITokenName.accessToken, userTokens.jwtWebToken);
+      setCookie(res, ITokenName.refreshToken, userTokens.jwtRefreshToken);
 
-  sendResponse(res, {
-    message: "User login successfull",
-    data: result,
-  });
+      const { password, ...rest } = user.toObject();
+
+      sendResponse(res, {
+        message: "User login successfull",
+        data: rest,
+      });
+    }
+  )(req, res, next);
 });
 
 const createNewAccessToken = catchAsync(async (req, res, next) => {

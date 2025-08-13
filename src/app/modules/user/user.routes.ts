@@ -18,6 +18,7 @@ router.get(
   checkAuth(Role.admin, Role.superAdmin),
   UserController.getAllUsers
 );
+router.get("/:id", UserController.getSingleUser);
 router.patch(
   "/:id",
   validationRequest(UserValidations.userUpdateValidationSchema),

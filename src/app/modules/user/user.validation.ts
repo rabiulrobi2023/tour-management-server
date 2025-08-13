@@ -3,24 +3,24 @@ import { Role, Status } from "./user.ifterface";
 
 const createUserValidationSchema = z.object({
   name: z
-    .string({ invalid_type_error: "Name must be string" })
+    .string({ invalid_type_error: "First must be string" })
     .min(2, { message: "Name too short" })
     .max(50, { message: "Name too long" }),
   email: z.string().email({ message: "Input must be email.type" }),
   password: z
     .string()
     .min(6, { message: "Password must be at least 8 characters long" })
-    .regex(/[a-z]/, {
-      message: "Password must contain at least one lowercase letter",
-    })
-    .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .regex(/\d/, { message: "Password must contain at least one number" })
-    .regex(/[!@#$%^&*]/, {
-      message:
-        "Password must contain at least one special character (!@#$%^&*)",
-    })
+    // .regex(/[a-z]/, {
+    //   message: "Password must contain at least one lowercase letter",
+    // })
+    // .regex(/[A-Z]/, {
+    //   message: "Password must contain at least one uppercase letter",
+    // })
+    // .regex(/\d/, { message: "Password must contain at least one number" })
+    // .regex(/[!@#$%^&*]/, {
+    //   message:
+    //     "Password must contain at least one special character (!@#$%^&*)",
+    // })
     .optional(),
 
   phone: z

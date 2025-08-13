@@ -7,6 +7,53 @@ import {
 import { envVariable } from "./envConfig";
 import { User } from "../modules/user/user.model";
 import { Role } from "../modules/user/user.ifterface";
+import { Strategy as LoacalStrategy } from "passport-local";
+import { checkPassword } from "../utils/checkPassword";
+
+passport.use(
+  new LoacalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    async (email: string, password: string, done) => {
+      try {
+        const isUserExists = await User.findOne({ email });
+
+        if (!isUserExists) {
+          return done("User does not exist");
+        }
+
+        const isGoogleAuthenticated = isUserExists.auths.some(
+          (providerObjects) => providerObjects.provider === "google"
+        );
+
+        if (isGoogleAuthenticated && !isUserExists?.password) {
+          return done(
+            "Your google authenticated user. Please set a password if your wnat to credential login"
+          );
+        }
+
+        if (!isUserExists.password) {
+          return done(null, false, { message: "Password required" });
+        }
+
+        const isPasswordMatch = await checkPassword(
+          password,
+          isUserExists.password as string
+        );
+
+        if (!isPasswordMatch) {
+          return done("Wrong Password");
+        }
+        if (isUserExists.isDeleted) {
+          return done("The account is deleted");
+        }
+
+        return done(null, isUserExists);
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
 
 passport.use(
   new GoogleStrategy(
@@ -23,7 +70,6 @@ passport.use(
     ) => {
       try {
         const email = profile.emails?.[0].value;
-        console.log(email);
 
         if (!email) {
           return done(null, false, { message: "Email not found" });
