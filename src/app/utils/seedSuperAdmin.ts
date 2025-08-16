@@ -22,6 +22,7 @@ const seedSuperAdmin = async () => {
     role: Role.superAdmin,
     isDeleted: false,
     status: Status.active,
+    isVerified: true,
     auths: [superAdminAuthProvider],
 
   };

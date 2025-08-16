@@ -12,29 +12,43 @@ import AppError from "../../errors/AppError";
 import { generateUserTokens } from "../../utils/userTokens";
 import passport from "passport";
 
-
 const credentialLogin = catchAsync(async (req, res, next) => {
+  const loginData = req.body;
+  const result = await AuthService.credentialLogin(loginData);
+  setCookie(res, ITokenName.accessToken, result.accessToken);
+  setCookie(res, ITokenName.refreshToken, result.refreshToken);
+  sendResponse(res, {
+    message: "User login successfully",
+    data: result,
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  passport.authenticate(
-    "local",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (err: any, user: any, info: any) => {
-      if (err) {
-        return next(new AppError(httpStatus.BAD_REQUEST, err));
-      }
 
-      const userTokens = generateUserTokens(user);
-      setCookie(res, ITokenName.accessToken, userTokens.jwtWebToken);
-      setCookie(res, ITokenName.refreshToken, userTokens.jwtRefreshToken);
+  // await passport.authenticate(
+  //   "local",
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   async (err: any, user: any, info: any) => {
+  //     if (err) {
+  //       return next(new AppError(httpStatus.BAD_REQUEST, err));
+  //     }
 
-      const { password, ...rest } = user.toObject();
+  //     if (!user) {
+  //       return next(new AppError(httpStatus.NOT_FOUND, "User not found"));
+  //     }
 
-      sendResponse(res, {
-        message: "User login successfull",
-        data: rest,
-      });
-    }
-  )(req, res, next);
+  //     const userTokens = generateUserTokens(user);
+  //     setCookie(res, ITokenName.accessToken, userTokens.jwtWebToken);
+  //     setCookie(res, ITokenName.refreshToken, userTokens.jwtRefreshToken);
+
+  //     const { password, ...rest } = user.toObject();
+  //     console.log(rest);
+
+  //     sendResponse(res, {
+  //       message: "User login successfull",
+  //       data: rest,
+  //     });
+  //   }
+  // )(req, res, next);
 });
 
 const createNewAccessToken = catchAsync(async (req, res, next) => {

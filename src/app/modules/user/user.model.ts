@@ -73,4 +73,9 @@ const userSchema = new Schema<IUser>(
 //   next();
 // });
 
+// userSchema.post("updateOne", function (data, next) {
+//   data.password = "";
+//   next();
+// });
+
 export const User = model<IUser>("user", userSchema);

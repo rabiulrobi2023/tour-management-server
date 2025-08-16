@@ -17,6 +17,9 @@ const credentialLogin = async (payload: Partial<IUser>) => {
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Wrong email id");
   }
+  if(isUserExists.isDeleted){
+    throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
+  }
 
   const isPasswordMatch = await checkPassword(
     payload.password as string,

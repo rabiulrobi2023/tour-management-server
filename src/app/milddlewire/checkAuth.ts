@@ -45,6 +45,9 @@ const checkAuth = (...requiredRoles: Role[]) => {
     if (isUserExist.isDeleted) {
       throw new AppError(httpStatus.BAD_REQUEST, "User is deleted");
     }
+    if(!isUserExist.isVerified){
+      throw new AppError(httpStatus.BAD_REQUEST, "User is unverified")
+    }
 
     req.user = verifiedToken;
     next();
