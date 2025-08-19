@@ -7,6 +7,8 @@ import { Booking } from "./booking.model";
 import httpStatus from "http-status-codes";
 import { generateTransactionId } from "./booking.utils";
 import mongoose from "mongoose";
+import { ISSLCommerz } from "../sslCommerz/sslcommerz.interface";
+import { SSLService } from "../sslCommerz/sslCommerz.service";
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
   const user = await User.findById(userId);
@@ -56,9 +58,22 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       .populate("user", "name email phone address")
       .populate("tour", "title description loaction startDate endDate division")
       .populate("payment", "transactionId invoiceUrl status amount");
+
+    const sslPayload: ISSLCommerz = {
+      name: user.name,
+      email: user.email,
+      address: user.address,
+      phone: user.phone,
+      amount: amount,
+      transactionId: transactionId,
+    };
+    const sslPayment = await SSLService.sslPaymentInit(sslPayload);
     await session.commitTransaction();
     session.endSession();
-    return updatedBooking;
+    return {
+      booking: updatedBooking,
+      paymentGatewayUrl: sslPayment.GatewayPageURL,
+    };
   } catch (error) {
     session.abortTransaction();
     session.endSession();

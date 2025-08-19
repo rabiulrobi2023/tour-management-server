@@ -2,23 +2,23 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-interface IEnvVars {
-  PORT: string;
-  DB_URL: string;
-  NODE_ENV: string;
-  SALT: string;
-  JWT_SECRET: string;
-  JWT_REFRESH_SECRET: string;
-  JWT_REFRESH_EXPIRE: string;
-  JWT_EXPIRE: string;
-  SUPER_ADMIN_EAMIL: string;
-  SUPER_ADMIN_PASS: string;
-  GOOGLE_CLIENT_ID: string;
-  GOOGLE_CLIENT_SECRET: string;
-  GOOGLE_CALLBACK_URL: string;
-  EXPRESS_SESSION_SECRET: string;
-  FORNTEND_URL: string;
-}
+// interface IEnvVars {
+//   PORT: string;
+//   DB_URL: string;
+//   NODE_ENV: string;
+//   SALT: string;
+//   JWT_SECRET: string;
+//   JWT_REFRESH_SECRET: string;
+//   JWT_REFRESH_EXPIRE: string;
+//   JWT_EXPIRE: string;
+//   SUPER_ADMIN_EAMIL: string;
+//   SUPER_ADMIN_PASS: string;
+//   GOOGLE_CLIENT_ID: string;
+//   GOOGLE_CLIENT_SECRET: string;
+//   GOOGLE_CALLBACK_URL: string;
+//   EXPRESS_SESSION_SECRET: string;
+//   FORNTEND_URL: string;
+// }
 
 const requiredVariables = [
   "PORT",
@@ -38,7 +38,7 @@ const requiredVariables = [
   "FORNTEND_URL",
 ];
 
-const envVars = (): IEnvVars => {
+const envVars = () => {
   requiredVariables.forEach((variable) => {
     if (!process.env[variable]) {
       throw new Error(`Missing required environment variable ${variable}`);
@@ -61,6 +61,18 @@ const envVars = (): IEnvVars => {
     GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL as string,
     EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
     FORNTEND_URL: process.env.FORNTEND_URL as string,
+    SSL: {
+      SSL_STORE_ID: process.env.SSL_STORE_ID,
+      SSL_STORE_PASS: process.env.SSL_STORE_PASS,
+      SSL_PAYMENT_API: process.env.SSL_PAYMENT_API,
+      SSL_VALIDATION_API: process.env.SSL_VALIDATION_API,
+      SSL_BACKEND_SECCESS_URL: process.env.SSL_BACKEND_SECCESS_URL,
+      SSL_BACKEND_FAIL_URL: process.env.SSL_BACKEND_FAIL_URL,
+      SSL_BACKEND_CANCEL_URL: process.env.SSL_BACKEND_CANCEL_URL,
+      SSL_FRONTEND_SECCESS_URL: process.env.SSL_FRONTEND_SECCESS_URL,
+      SSL_FRONTEND_FAIL_URL: process.env.SSL_FRONTEND_FAIL_URL,
+      SSL_FRONTEND_CANCEL_URL: process.env.SSL_FRONTEND_CANCEL_URL,
+    },
   };
 };
 export const envVariable = envVars();
